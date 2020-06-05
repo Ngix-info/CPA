@@ -1,0 +1,166 @@
+<center><div style="background-color: hsla(0, 0%, 100%, 0.63); border-radius: 5px; border: 1px solid Gainsboro; box-sizing: border-box; float: center; font-size: 11pt; font-weight: lighter; font: 12px Georgia, serif; height: 580px; width: 700px;">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+
+<div class="panel panel-primary" style="margin: 15px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Cek akun sampeyan</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal">
+            <div class="form-group required">
+                <label for="token" class="control-label col-xs-2">Token</label>
+                <div class="col-xs-10">
+                    <input type="text" class="form-control" id="token" placeholder="isi token !! contoh acces token: CAAAAAIZAgwGsBAE0FNlNsZBxKKoQmeTvnRw72N9eyMzFuPYuVJOC51DC2Lci2EJ5LZB6ZAuZAZCfCYwTvmZAKeYqRkt3Tw1rGhJwXqea0ug6FZAbnrxvf5DC87F6C1UJN8JMQiGMGbJHcvs6nhpHU3hTThIiWzKZBW3oiDIjPvm7YZD">
+
+                </div>
+            </div>
+            <div class="form-group required">
+                <label for="deskripsi" class="control-label col-xs-2">UID</label>
+                <div class="col-xs-10">
+                <textarea class="form-control" rows="5" id="kumpulanUID" placeholder=" Masukin aja semua ID atau username FB nya di sini contoh username:  kswdh77 atau user id contoh: 100xxxxxxxxxx"></textarea>
+                </div>
+            </div>
+			
+			<div class="form-group required">
+                <label for="deskripsi" class="control-label col-xs-2">URIP</label>
+                <div class="col-xs-10">
+                <textarea readonly="" class="form-control" rows="5" id="hidup" placeholder="Akun yang hidup nanti ada disini"></textarea>
+                </div>
+            </div>
+			
+			<div class="form-group required">
+                <label for="deskripsi" class="control-label col-xs-2">MATI</label>
+                <div class="col-xs-10">
+                <textarea readonly="" class="form-control" rows="5" id="mati" placeholder="Akun yang mati hasilnya disini"></textarea>
+                </div>
+            </div>
+           
+
+           <div class="form-group">
+                <div class="col-xs-offset-2 col-xs-10" style="">
+					<button type="text" class="btn btn-danger" id="tombolToket" onclick="analisa();">Analisa </button>
+					<span id="hitunganBerjalan">yaaa alhamdulillah..!!! <span>
+                </span></span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function popcron(url, lebar, tinggi, scroll) {
+        var kiri = screen.availWidth / 2 - lebar / 2;
+        var atas = screen.availHeight / 2 - tinggi / 2;
+        var properties = 'toolbar=1,location=0,statusbar=1,menubar=0,scrollbars=' + scroll + ',width=' + lebar + ',height=' + tinggi + ',top=' + atas + ',left=' + kiri;
+        window.open(url, 'popup', properties);
+    };
+
+    function potongToket() {
+        var toket = $('#token').val();
+        if (toket.split('access_token=')[1]) {
+            toket = toket.split('access_token=')[1].split('&')[0];
+            $('#token').val(toket);
+        }
+        return toket
+    }
+
+    function jupukToket() {
+        popcron("http://www.ipeenk.com/2014/12/Cara-Mengambil-Akses-Token-Facebook.html", '400', '700', 'yes');
+    };
+
+    var hitunganKabeh = 0;
+    var hidup = 0;
+    var mati = 0;
+    var jumlahTarget = 0;
+
+    function analisa() {
+        toketku = potongToket();
+        if (toketku == '') {
+            alert("Token kosong gan!");
+        } else {
+            var ids = $('#kumpulanUID').val();
+            var lines = ids.split("\n");
+            jumlahTarget = lines.length;
+            for (x in ids.split('\n')) {
+                f = ids.split('\n')[x];
+                var fburl = "https://graph.facebook.com/" + f + "?fields=username,id,name,birthday,location,id,hometown,id,name,id,locale,id&access_token=" + toketku;
+                $.getJSON(fburl, function(b) {
+
+                    if (b.id) {
+                        var txt = $("textarea#hidup");
+                        txt.val(txt.val() + "\n" + b.id);
+                        hitunganKabeh++;
+                        hidup++;
+                    }
+
+                }).error(function() {
+
+                    var txt = $("textarea#mati");
+                    txt.val(txt.val() + "\n" + f);
+                    hitunganKabeh++;
+                    mati++;
+
+                });
+            }
+
+
+        }
+
+    }
+
+
+    function analisaDelay(a) {
+        toketku = potongToket();
+        if (toketku == '') {
+            alert("Token kosong gan!");
+        } else {
+
+            var fburl = "https://graph.facebook.com/" + a + "?access_token=" + toketku;
+            $.getJSON(fburl, function(b) {
+
+                if (b.id) {
+                    var txt = $("textarea#hidup");
+                    txt.val(txt.val() + "\n" + b.id+b.id);
+                    hidup++;
+                }
+
+            }).error(function() {
+
+                var txt = $("textarea#mati");
+                txt.val(txt.val() + "\n" + a);
+                mati++;
+
+            });
+        }
+    }
+
+    function analisaPakeDelay() {
+        var nextclaim = 1;
+        var myVar = setInterval(function() {
+            if (nextclaim <= 0) {
+                clearInterval(myVar);
+                var ids = $('#kumpulanUID').val();
+                var lines = ids.split("\n");
+                jumlahTarget = lines.length;
+
+                if (ids.length == 0) {
+                    alert("target kosong");
+                } else {
+                    analisaDelay(lines[hitunganKabeh])
+                    hitunganKabeh++;
+					$("#hitunganBerjalan").html((lines.length-(hitunganKabeh+1)) + " Dalam antrian");					
+                }
+                if ((hitunganKabeh+1) == jumlahTarget) {
+                    console.log(hitunganKabeh + '|' + jumlahTarget);
+                } else {
+                    analisaPakeDelay();
+                }
+            } else {
+                nextclaim--;
+            }
+        }, 100)
+    }
+</script></div>
+</center>
